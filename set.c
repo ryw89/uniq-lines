@@ -7,6 +7,7 @@
 // A single element in a bucket of the set
 typedef struct SetElem {
     char *data;
+    unsigned long count;
     struct SetElem *next;
 } SetElem;
 
@@ -53,16 +54,16 @@ bool in_set(char *key, SetElem set[]) {
 
     // Otherwise, iterate through the bucket's elements using the
     // 'next' pointers, until we find the key or hit a null pointer
-	SetElem* current = &elem;
+    SetElem *current = &elem;
     while (current != NULL) {
-		// Compare this element's data with the key
-		if ((strcmp(key, current->data) == 0)) {
+        // Compare this element's data with the key
+        if ((strcmp(key, current->data) == 0)) {
             return true;
         }
 
-		// Didn't match, so we'll continue with the next element. If
-		// it's a null pointer, we'll end up breaking out of the loop
-		current = current->next;
+        // Didn't match, so we'll continue with the next element. If
+        // it's a null pointer, we'll end up breaking out of the loop
+        current = current->next;
     }
 
     // Couldn't find anything
@@ -74,7 +75,7 @@ void insert_key(char *key, SetElem set[], bool skip_check) {
     // First, fetch index of the key
     unsigned long index = get_index(key);
 
-	// We may have just checked the set, so no need to traverse again
+    // We may have just checked the set, so no need to traverse again
     if (!skip_check) {
         // Check if the key is in the set. If so, just return.
         if (in_set(key, set)) {
@@ -90,20 +91,69 @@ void insert_key(char *key, SetElem set[], bool skip_check) {
         current = current->next;
     }
 
-	// If current.data is NULL, just update its data field. (This happens
-	// if we have an empty bucket.)
-	if (current->data == NULL) {
-		current->data = key;
-		return;
-	}
+    // If current.data is NULL, just update its data & counts fields.
+    // (This happens if we have an empty bucket.)
+    if (current->data == NULL) {
+        current->data = key;
+        current->count = 1;
+        return;
+    }
 
     // Allocate a new set element.
     SetElem *new_elem = (SetElem *)malloc(sizeof(SetElem));
 
     // Insert data
     new_elem->data = key;
-	new_elem->next = NULL;
+    new_elem->count = 1;
+    new_elem->next = NULL;
 
-	// Update next pointer
+    // Update next pointer
     current->next = new_elem;
+}
+
+// Increment the count of times we've seen this element in the set
+bool inc_count(char *key, SetElem set[]) {
+    // First, fetch index of the key
+    unsigned long index = get_index(key);
+
+    // Otherwise, iterate through the bucket's elements using the
+    // 'next' pointers, until we find the key or hit a null pointer
+    SetElem *current = &set[index];
+    while (current != NULL) {
+        // Compare this element's data with the key
+        if ((strcmp(key, current->data) == 0)) {
+            ++current->count;
+            return true;
+        }
+
+        // Didn't match, so we'll continue with the next element. If
+        // it's a null pointer, we'll end up breaking out of the loop
+        current = current->next;
+    }
+
+    // Couldn't find the key -- return false to indicate failure
+    return false;
+}
+
+// Get the count of times this element has been seen.
+unsigned long get_count(char *key, SetElem set[]) {
+    // First, fetch index of the key
+    unsigned long index = get_index(key);
+
+    // Iterate through the bucket's elements using the 'next'
+    // pointers, until we find the key or hit a null pointer
+    SetElem *current = &set[index];
+    while (current != NULL) {
+        // Compare this element's data with the key
+        if ((strcmp(key, current->data) == 0)) {
+            return current->count;
+        }
+
+        // Didn't match, so we'll continue with the next element. If
+        // it's a null pointer, we'll end up breaking out of the loop
+        current = current->next;
+    }
+
+    // Couldn't find the key -- return zero count
+    return 0;
 }
