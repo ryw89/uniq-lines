@@ -33,6 +33,7 @@ int main(int argc, char **argv) {
 
     // Root node of linked list for storing unique lines
     Node root = {NULL, NULL};
+    Node *current = &root;
 
     // Iterate over lines
     char *line = NULL;
@@ -59,7 +60,7 @@ int main(int argc, char **argv) {
         // (That is, if we need it as determined by the command-line
         // args.)
         if (args.count) {
-            append(key, &root);
+            current = append(key, current);
         }
 
         // Insert the key into the set

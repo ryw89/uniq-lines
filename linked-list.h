@@ -6,4 +6,4 @@ typedef struct Node {
 } Node;
 
 // Insert an element to the end of linked list
-void append(char *data, Node *current);
+Node *append(char *data, Node *current);
