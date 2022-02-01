@@ -78,8 +78,8 @@ int main(int argc, char **argv) {
     if (args.count) {
         Node *current = &root;
         while (current != NULL) {
-			// Get count of times this element has been seen
-			unsigned long count = get_count(current->data, set);
+            // Get count of times this element has been seen
+            unsigned long count = get_count(current->data, set);
 
             printf("%lu %s", count, current->data);
             current = current->next;
