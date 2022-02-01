@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
     // Iterate over list of lines input and print their counts, too
     if (args.count) {
         Node *current = &root;
-        while (current != NULL) {
+        while (current != NULL && current->data != NULL) {
             // Get count of times this element has been seen
             unsigned long count = get_count(current->data, set);
 
