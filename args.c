@@ -20,7 +20,7 @@ void parse_args(int argc, char **argv, Args *args, int max_args) {
     bool found_filename = false;
     for (int i = 1; i < argc; ++i) {
         // Check for help arguments
-        if (strcmp(argv[i], "-h") == 0) {
+        if ((strcmp(argv[i], "-h") == 0) || (strcmp(argv[i], "--help") == 0)) {
 			char *help_msg = "Usage: uniq-lines [OPTION]... [FILE]\n"
 "Print unique lines of a file.\n\n"
 "With no FILE, read standard input.\n\n"
