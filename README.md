@@ -22,7 +22,8 @@ the file, using the `-c, --count` flag.
 ## Installation
 
 The included `Makefile` can be used for building and installing the
-program. You'll need GCC for this.
+program. By default, you'll need GCC for this, but other C compilers
+should work just fine.
 
 ``` bash
 make
