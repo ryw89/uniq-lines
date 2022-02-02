@@ -21,7 +21,12 @@ void parse_args(int argc, char **argv, Args *args, int max_args) {
     for (int i = 1; i < argc; ++i) {
         // Check for help arguments
         if (strcmp(argv[i], "-h") == 0) {
-            printf("uniq-lines: Help placeholder.\n");
+			char *help_msg = "Usage: uniq-lines [OPTION]... [FILE]\n"
+"Print unique lines of a file.\n\n"
+"With no FILE, read standard input.\n\n"
+"  -c, --count    Print counts of each unique line.\n";
+
+            printf("%s", help_msg);
             exit(0);
         }
 
