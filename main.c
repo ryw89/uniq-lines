@@ -7,7 +7,7 @@
 
 #include "args.h"
 #include "linked-list.h"
-#include "set.h"
+#include "map.h"
 
 int main(int argc, char **argv) {
     // Parse CLI args
@@ -28,8 +28,8 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    // Create a set, using an array of SET_SIZE
-    SetElem set[SET_SIZE] = {{NULL, 0, NULL}};
+    // Create a map, using an array of MAP_SIZE
+    MapElem map[MAP_SIZE] = {{NULL, 0, NULL}};
 
     // Root node of linked list for storing unique lines
     Node root = {NULL, NULL};
@@ -39,14 +39,14 @@ int main(int argc, char **argv) {
     char *line = NULL;
     size_t len = 0;
     while (getline(&line, &len, fp) != -1) {
-        // Check if the line is in the set. If not, print add to
-        // set.
-        bool is_in_set = in_set(line, set);
+        // Check if the line is in the map. If not, print add to
+        // map.
+        bool is_in_map = in_map(line, map);
 
         // Just (optionally) increment the count of times we've seen this line
-        if (is_in_set) {
+        if (is_in_map) {
             if (args.count) {
-                inc_count(line, set);
+                inc_count(line, map);
             }
             continue;
         }
@@ -63,9 +63,9 @@ int main(int argc, char **argv) {
             current = append(key, current);
         }
 
-        // Insert the key into the set
+        // Insert the key into the map
         bool already_checked = true;
-        insert_key(key, set, already_checked);
+        insert_key(key, map, already_checked);
 
         // If we're using the -c, --count args, we can't print until
         // we've counted every line
@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
         Node *current = &root;
         while (current != NULL && current->data != NULL) {
             // Get count of times this element has been seen
-            unsigned long count = get_count(current->data, set);
+            unsigned long count = get_count(current->data, map);
 
             printf("%lu %s", count, current->data);
             current = current->next;

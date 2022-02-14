@@ -2,14 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SET_SIZE 512  // Arbitrary choice
+#define MAP_SIZE 512  // Arbitrary choice
 
-// A single element in a bucket of the set
-typedef struct SetElem {
+// A single element in a bucket of the map
+typedef struct MapElem {
     char *data;
     unsigned long count;
-    struct SetElem *next;
-} SetElem;
+    struct MapElem *next;
+} MapElem;
 
 // Jenkins hash function
 unsigned long hash(char *key) {
@@ -32,17 +32,17 @@ unsigned long hash_to_index(unsigned long hash, int divisor) {
 }
 
 unsigned long get_index(char *key) {
-    return (hash_to_index(hash(key), SET_SIZE));
+    return (hash_to_index(hash(key), MAP_SIZE));
 }
 
-// Determine whether certain key is in a set.
-bool in_set(char *key, SetElem set[]) {
+// Determine whether certain key is in a map.
+bool in_map(char *key, MapElem map[]) {
     // Find the index of the bucket the key would have if it's in the
-    // set
+    // map
     unsigned long index = get_index(key);
-    SetElem elem = set[index];
+    MapElem elem = map[index];
 
-    // Empty bucket in set, so return false
+    // Empty bucket in map, so return false
     if (elem.data == NULL) {
         return false;
     }
@@ -54,7 +54,7 @@ bool in_set(char *key, SetElem set[]) {
 
     // Otherwise, iterate through the bucket's elements using the
     // 'next' pointers, until we find the key or hit a null pointer
-    SetElem *current = &elem;
+    MapElem *current = &elem;
     while (current != NULL) {
         // Compare this element's data with the key
         if ((strcmp(key, current->data) == 0)) {
@@ -70,15 +70,15 @@ bool in_set(char *key, SetElem set[]) {
     return false;
 }
 
-// Insert a key into a set
-void insert_key(char *key, SetElem set[], bool skip_check) {
+// Insert a key into a map
+void insert_key(char *key, MapElem map[], bool skip_check) {
     // First, fetch index of the key
     unsigned long index = get_index(key);
 
-    // We may have just checked the set, so no need to traverse again
+    // We may have just checked the map, so no need to traverse again
     if (!skip_check) {
-        // Check if the key is in the set. If so, just return.
-        if (in_set(key, set)) {
+        // Check if the key is in the map. If so, just return.
+        if (in_map(key, map)) {
             return;
         }
     }
@@ -86,7 +86,7 @@ void insert_key(char *key, SetElem set[], bool skip_check) {
     // Iterate through this bucket's elements until we hit a null next
     // pointer. (Which could very well happen on the first element of
     // the bucket.)
-    SetElem *current = &set[index];
+    MapElem *current = &map[index];
     while (current->next != NULL) {
         current = current->next;
     }
@@ -99,8 +99,8 @@ void insert_key(char *key, SetElem set[], bool skip_check) {
         return;
     }
 
-    // Allocate a new set element.
-    SetElem *new_elem = (SetElem *)malloc(sizeof(SetElem));
+    // Allocate a new map element.
+    MapElem *new_elem = (MapElem *)malloc(sizeof(MapElem));
 
     // Insert data
     new_elem->data = key;
@@ -111,14 +111,14 @@ void insert_key(char *key, SetElem set[], bool skip_check) {
     current->next = new_elem;
 }
 
-// Increment the count of times we've seen this element in the set
-bool inc_count(char *key, SetElem set[]) {
+// Increment the count of times we've seen this element in the map
+bool inc_count(char *key, MapElem map[]) {
     // First, fetch index of the key
     unsigned long index = get_index(key);
 
     // Otherwise, iterate through the bucket's elements using the
     // 'next' pointers, until we find the key or hit a null pointer
-    SetElem *current = &set[index];
+    MapElem *current = &map[index];
     while (current != NULL) {
         // Compare this element's data with the key
         if ((strcmp(key, current->data) == 0)) {
@@ -136,13 +136,13 @@ bool inc_count(char *key, SetElem set[]) {
 }
 
 // Get the count of times this element has been seen.
-unsigned long get_count(char *key, SetElem set[]) {
+unsigned long get_count(char *key, MapElem map[]) {
     // First, fetch index of the key
     unsigned long index = get_index(key);
 
     // Iterate through the bucket's elements using the 'next'
     // pointers, until we find the key or hit a null pointer
-    SetElem *current = &set[index];
+    MapElem *current = &map[index];
     while (current != NULL) {
         // Compare this element's data with the key
         if ((strcmp(key, current->data) == 0)) {
