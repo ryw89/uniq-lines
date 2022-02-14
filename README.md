@@ -31,3 +31,18 @@ sudo make install
 ```
 
 (By default, this program installs to `/usr/local/bin`.)
+
+## Comparison with other tools
+
+`uniq-lines` is a minimalistic tool intended to do one thing well and
+should be quite fast. This becomes especially apparent when dealing with a
+large number of lines.
+
+Here are some arbitrary benchmarks using a machine with an Intel
+i7-8700 @ 4.6GHz:
+
+| Command                                                    | Line count  | Time   |
+| ---------------------------------------------------------- | ----------- | ------ |
+| `uniq-lines -c`                                            | 261,798,216 | 18.80s |
+| `awk '{!seen[$0]++}END{for (i in seen) print seen[i], i}'` | 261,798,216 | 26.32s |
+| `sort \| uniq -c`                                          | 261,798,216 | 99.25s |
