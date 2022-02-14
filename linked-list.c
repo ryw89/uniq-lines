@@ -23,9 +23,9 @@ Node *append(char *data, Node *current) {
 
     // Otherwise, allocate a new node and point current.next to it
     Node *node = (Node *)malloc(sizeof(Node));
-	node->data = data;
+    node->data = data;
 
     // Insert data
     current->next = node;
-	return node;
+    return node;
 }
