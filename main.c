@@ -54,8 +54,6 @@ int main(int argc, char **argv) {
         // Clone the char -- Note that each iteration of getline will
         // change the address that 'line' points to
         char *key = malloc(strlen(line));
-
-#pragma GCC diagnostic warning "-Wstringop-overflow"
         strncpy(key, line, strlen(line));
 
         // The line wasn't seen before, so let's append it to the list
