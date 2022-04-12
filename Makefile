@@ -1,7 +1,7 @@
 DESTDIR = /usr/local/bin
 
 CC = gcc
-CC_ARGS = -std=c99 -Wall -Werror -Wextra -Wpedantic -pedantic-errors -Wno-unknown-warning-option -Wno-stringop-overflow
+CC_ARGS = -std=c99 -Wall -Werror -Wextra -Wpedantic -pedantic-errors
 CC_CMD = $(CC) $(CC_ARGS)
 
 C_FILES = main.c args.c linked-list.c map.c
