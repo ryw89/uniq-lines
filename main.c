@@ -53,8 +53,8 @@ int main(int argc, char **argv) {
 
         // Clone the char -- Note that each iteration of getline will
         // change the address that 'line' points to
-        char *key = malloc(strlen(line));
-        strncpy(key, line, strlen(line));
+        char *key = malloc(strlen(line) + 1);
+        strcpy(key, line);
 
         // The line wasn't seen before, so let's append it to the list
         // (That is, if we need it as determined by the command-line
